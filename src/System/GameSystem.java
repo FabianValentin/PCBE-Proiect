@@ -41,6 +41,8 @@ public class GameSystem {
 					while(cntr_iron+noR > Constants.nr_iron)//daca depasim numarul maxim de unitati din resursa respectiva alegem alt numar mai mic
 					{
 						noR = (int)(Math.random()*3);
+						if(noR == 0)
+							noR = 1;
 					}
 					resType = Constants.iron;
 					cntr_iron+=noR;
@@ -49,6 +51,8 @@ public class GameSystem {
 					while(cntr_food+noR > Constants.nr_food)
 					{
 						noR = (int)(Math.random()*3);
+						if(noR == 0)
+							noR = 1;
 					}
 					resType = Constants.food;
 					cntr_food+=noR;
@@ -67,6 +71,8 @@ public class GameSystem {
 					while(cntr_iron+noR > Constants.nr_iron)
 					{
 						noR = (int)(Math.random()*3);
+						if(noR == 0)
+							noR = 1;
 					}
 					resType = Constants.iron;
 					cntr_iron+=noR;
@@ -75,6 +81,8 @@ public class GameSystem {
 					while(cntr_food+noR > Constants.nr_food)
 					{
 						noR = (int)(Math.random()*3);
+						if(noR == 0)
+							noR = 1;
 					}
 					resType = Constants.food;
 					cntr_food+=noR;
