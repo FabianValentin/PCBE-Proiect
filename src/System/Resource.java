@@ -1,15 +1,19 @@
 package System;
 
-import java.util.HashMap;
-
 public class Resource {
-	private HashMap<String,Integer> resource;
+	private String resourceName;
+	private int noRes;
 	
-	public Resource(HashMap<String, Integer> res) {
-		this.resource = res;
+	public Resource(String res, int nr) {
+		this.resourceName = res;
+		this.noRes = nr;
 	}
 	
-	public HashMap<String, Integer> getResource() {
-		return this.resource;
+	public String getType() {
+		return this.resourceName;
+	}
+	
+	public int getNo() {
+		return this.noRes;
 	}
 }

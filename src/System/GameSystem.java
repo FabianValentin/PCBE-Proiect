@@ -1,15 +1,13 @@
 package System;
 
-import java.util.HashMap;
-
 import Constants.Constants;
 
-public class Systems {
+public class GameSystem {
 
 	private Resource[][] matrix = new Resource[6][6];
 	
 	public static void main(String[] args) {
-		Systems system = new Systems();
+		GameSystem system = new GameSystem();
 		system.createMatrix();
 		system.afis();
 	}
@@ -18,7 +16,7 @@ public class Systems {
 		int cntr_wood = 0;
 		int cntr_iron = 0;
 		int cntr_food = 0;
-		HashMap<String, Integer> res;
+		Resource res;
 		Integer nrRes;
 		String resType="";
 		for(int i = 0; i < 6; i++) {
@@ -83,9 +81,8 @@ public class Systems {
 					break;	
 				}
 				nrRes = new Integer(noR);
-				res = new HashMap<>();
-				res.put(resType, nrRes);
-				matrix[i][j] = new Resource(res);
+				res = new Resource(resType, nrRes);
+				matrix[i][j] = res;
 			}
 		}
 	}
@@ -94,7 +91,7 @@ public class Systems {
 		for(int i=0;i<6;i++) {
 			for(int j=0;j<6;j++) {
 				
-				System.out.print(matrix[i][j].getResource().keySet().toString() + " " + matrix[i][j].getResource().values());
+				System.out.print(matrix[i][j].getType() + matrix[i][j].getNo() + " ");
 			}
 			System.out.println();
 		}
