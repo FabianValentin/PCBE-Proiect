@@ -17,16 +17,16 @@ public class GameSystem {
 		int cntr_iron = 0;
 		int cntr_food = 0;
 		Resource res;
-		Integer nrRes;
 		String resType="";
+		int noR;
 		for(int i = 0; i < 6; i++) {
 			for(int j = 0; j < 6; j++) {
-				int noR = (int)(Math.random()*5);
+				noR = (int)(Math.random()*5);//cream un numar random de unitati dintr-o resurse <=5
 				if(noR == 0)
 					noR = 1;
-				int typeRes = (int)(Math.random()*(5.9));
+				int typeRes = (int)(Math.random()*(5.9));//alegem random tipul de resursa 
 				
-				switch (typeRes) {
+				switch (typeRes) { //6 caseuri pentr a distribui pe harta de joc mai bine resursele
 				case 0 :// 0 = wood
 					while(cntr_wood+noR > Constants.nr_wood)
 					{
@@ -38,7 +38,7 @@ public class GameSystem {
 					cntr_wood+=noR;
 					break;
 				case 1://1 = iron
-					while(cntr_iron+noR > Constants.nr_iron)
+					while(cntr_iron+noR > Constants.nr_iron)//daca depasim numarul maxim de unitati din resursa respectiva alegem alt numar mai mic
 					{
 						noR = (int)Math.random()*3;
 					}
@@ -80,9 +80,8 @@ public class GameSystem {
 					cntr_food+=noR;
 					break;	
 				}
-				nrRes = new Integer(noR);
-				res = new Resource(resType, nrRes);
-				matrix[i][j] = res;
+				res = new Resource(resType, noR);
+				matrix[i][j] = res;//populam harta cu noua resursa
 			}
 		}
 	}
