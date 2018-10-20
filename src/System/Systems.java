@@ -6,6 +6,8 @@ import Constants.Constants;
 
 public class Systems {
 
+	//Mira: camp static pentru a nu crea obiect Systems ca sa o folosesc in Player
+	//sau clasa Matrix/ GameTable
 	private Resource[][] matrix = new Resource[6][6];
 	
 	public static void main(String[] args) {
