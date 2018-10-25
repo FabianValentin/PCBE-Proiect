@@ -6,18 +6,25 @@ import java.util.Map;
 
 public class Player {
     private int soldiersNumber;
+    
+    // Mapping resource type to quantity. 
     private Map<String, Integer> resources = new HashMap<>();
-    private HashSet<Integer> takenPositions = new HashSet<>();
-    private int actualPosition;
+    
+    // Set of cells that were visited by the player. 
+    private HashSet<Integer> pastPositions = new HashSet<>();
+    
+    // Current position of the player.
+    private int currentPosition;
     //status poate fi blocked sau active
     //o sa il convertesc in enum maine sa fie mai type safe
     private String status;
 
-    private MiraResource[][] gameTable = MiraMatrix.createMatrix();
+	private Resource[][] matrix;
 
-    public Player(int actualPosition, String status){
-        this.actualPosition = actualPosition;
-        this.status = status;
+    public Player(int currentPosition, Resource[][] matrix){
+        this.currentPosition = currentPosition;
+        this.matrix = matrix;
+        this.status = "free";
     }
 
     public int getSoldiersNumber() {
@@ -36,24 +43,23 @@ public class Player {
         this.resources = resources;
     }
 
-    public HashSet<Integer> getTakenPositions() {
-        return takenPositions;
+    public HashSet<Integer> getPastPositions() {
+        return pastPositions;
     }
 
-    public void setTakenPositions(HashSet<Integer> takenPositions) {
-        this.takenPositions = takenPositions;
+    public void setpastPositions(HashSet<Integer> pastPositions) {
+        this.pastPositions = pastPositions;
     }
 
-    public int getActualPosition() {
-        return actualPosition;
+    public int getcurrentPosition() {
+        return currentPosition;
     }
 
-    public void setActualPosition(int actualPosition) {
-        this.actualPosition = actualPosition;
+    public void setcurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
-    //Metoda care il face pe jucator sa se mute pe alta casuta
-    //I se actualizeaza actualPosition
+    // Method that moves the player from one position to another. 
     public void move(){
         if (this.status.equals("blocked"))
             return;
@@ -65,14 +71,14 @@ public class Player {
             return;
         }
 
-        this.actualPosition = determineMax(neighboursList);
+        this.currentPosition = determineMax(neighboursList);
     }
 
     //lista cu vecinii valizi - si ca pozitie si ca disponibilitate
     public HashSet<Integer> createNeighboursList(){
         HashSet<Integer> neighboursList = new HashSet<>();
-        int j = actualPosition%10;
-        int i = (actualPosition-j)/10;
+        int j = currentPosition%10;
+        int i = (currentPosition-j)/10;
 
         if (i + 1 < 6){
             if (isAvailable((i+1)*10+j))
@@ -95,7 +101,7 @@ public class Player {
 
     //daca pozitia e libera => true=available => move, else false
     public boolean isAvailable(int position){
-        return !takenPositions.contains(position);
+        return !pastPositions.contains(position);
     }
 
     //determina pozitia cu nr cel mai mare de resurse dintre vecini
@@ -106,7 +112,7 @@ public class Player {
         for (Integer n : neighboursList) {
             j = n%10;
             i = (n-j)/10;
-            noRes = gameTable[i][j].getNumber();
+            noRes = matrix[i][j].getNumber();
             if(noRes > max)
                 max = noRes;
             pos = n;
