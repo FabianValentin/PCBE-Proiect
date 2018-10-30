@@ -1,21 +1,54 @@
 package System;
 
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class GameSystem {
 	
 	public static void main(String[] args) {
 		Matrix matrix = new Matrix();
+		CopyOnWriteArrayList<Player> player_list = new CopyOnWriteArrayList<Player>();
+		 
 		Player p1 = new Player(0, matrix);
-		Player p2 = new Player(5, matrix);
+		player_list.add(p1);
+		
+		Player p2 = new Player(2, matrix);
+		player_list.add(p2);
+		
 		print(matrix.getMatrix(), p1, p2);
-		p1.move();
-		p2.move();
-		System.out.println();
-		print(matrix.getMatrix(), p1, p2);
+		
+		while (!player_list.isEmpty()) {
+			ArrayList<Thread> thread_list = new ArrayList<Thread>();
+			for(Player p : player_list) {
+				if (p.getStatus().equals("free")) {
+					thread_list.add(new Thread(p));
+				} 
+			}
+			
+			for(Thread t : thread_list) {
+				t.start();
+			}
+			
+			try {
+				for(Thread t : thread_list) {
+					t.join();
+				}
+				print(matrix.getMatrix(), p1, p2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			for(Player p : player_list) {
+				if (p.getStatus().equals("blocked")) {
+					player_list.remove(p);
+				} 
+			}
+		}
 	}
 	
 	public static void print(Resource[][] matrix, Player p1, Player p2) {
-		for(int i=0;i<6;i++) {
-			for(int j=0;j<6;j++) {
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
 				System.out.print("|" + matrix[i][j].getType() + " " + matrix[i][j].getNumber() + "  ");
 				if(p1.getcurrentPosition() == i*10 + j)
 					System.out.print(p1.getIndex());
@@ -30,5 +63,8 @@ public class GameSystem {
 				System.out.print("-");
 			System.out.println();
 		}
+		System.out.println("Player 1 has " + p1.getResources());
+		System.out.println("Player 2 has " + p2.getResources());
+		System.out.println();
 	}
 }

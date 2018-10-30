@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Player {
+public class Player implements Runnable {
 	
 	// Number of players.
 	private static int ord = 1;
@@ -25,15 +25,32 @@ public class Player {
 	private Matrix matrix;
 
     public Player(int currentPosition, Matrix matrix){
+    	this.matrix = matrix;
         this.currentPosition = currentPosition;
         this.pastPositions.add(currentPosition);
-        this.matrix = matrix;
+        takeResources(currentPosition);
         this.status = "free";
         this.ind = ord;
         this.ord++;
     }
 
-    public int getSoldiersNumber() {
+    private void takeResources(int currentPosition) {
+    	int i = currentPosition/10;
+    	int j = currentPosition%10;
+    	String type = matrix.getMatrix()[i][j].getType();
+    	
+    	// If the cell isn't empty, the player gets one resource. 
+    	if (matrix.getMatrix()[i][j].getNumber() != 0) {
+	    	if (!this.resources.containsKey(type)) {
+	    		this.resources.put(type, 1);
+	    	} else {
+	    		this.resources.put(type, 1 + this.resources.get(type));
+	    	}
+	    	matrix.update(i, j);
+    	}
+	}
+
+	public int getSoldiersNumber() {
         return soldiersNumber;
     }
 
@@ -58,7 +75,7 @@ public class Player {
     }
 
     /* Method that moves the player from one position to another. */
-    public void move(){
+    public synchronized void move(){
         if (this.status.equals("blocked"))
             return;
 
@@ -71,6 +88,7 @@ public class Player {
         
         this.pastPositions.add(this.currentPosition);
         this.currentPosition = determineMax(neighboursList);
+        takeResources(currentPosition);
     }
 
     /* Generates a list with valid neighbours. */
@@ -80,13 +98,13 @@ public class Player {
         int i = currentPosition/10;
         
         // Not on the last row.
-        if (i < 5){
+        if (i < 2){ //5
             if (isAvailable((i+1)*10+j))
                 neighbourList.add((i+1)*10+j);
         }
         
         // Not on the last column. 
-        if (j < 5){
+        if (j < 2){ //5
             if (isAvailable(i*10+j+1))
                 neighbourList.add(i*10+j+1);
         }
@@ -129,4 +147,9 @@ public class Player {
         }
         return pos;
     }
+
+	@Override
+	public void run() {
+		move();
+	}
 }
