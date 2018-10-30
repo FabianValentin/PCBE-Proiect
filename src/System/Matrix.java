@@ -1,7 +1,7 @@
 package System;
 
 class Matrix {
-	private static Resource[][] game_matrix = new Resource[6][6];
+	private Resource[][] game_matrix = new Resource[6][6];
 	private static final int NR_RES = 30;
 	
 	public Matrix () {
@@ -78,14 +78,11 @@ class Matrix {
 		}
 	}
 	
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<6;i++) {
-			for(int j=0;j<6;j++) {
-				sb.append(game_matrix[i][j].getType() + game_matrix[i][j].getNumber() + " ");
-			}
-			sb.append("\n");
-		}
-		return sb.toString();
+	public void setMatrix (Resource[][] matrix) {
+		this.game_matrix = matrix;
+	}
+	
+	public Resource[][] getMatrix() {
+		return game_matrix;
 	}
 }

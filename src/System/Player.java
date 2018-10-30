@@ -6,6 +6,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class Player {
+	
+	// Number of players.
+	private static int ord = 1;
+	
+	// Number of the player.
+	private int ind;
+	
     private int soldiersNumber;
     
     // Mapping resource type to quantity. 
@@ -27,6 +34,8 @@ public class Player {
         this.pastPositions.add(currentPosition);
         this.matrix = matrix;
         this.status = "free";
+        this.ind = ord;
+        this.ord++;
     }
 
     public int getSoldiersNumber() {
@@ -47,6 +56,10 @@ public class Player {
     
     public int getcurrentPosition() {
         return currentPosition;
+    }
+    
+    public int getIndex() {
+    	return ind;
     }
 
     // Method that moves the player from one position to another. 
