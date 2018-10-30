@@ -9,24 +9,19 @@ public class Player {
 	
 	// Number of players.
 	private static int ord = 1;
-	
 	// Number of the player.
 	private int ind;
-	
-    private int soldiersNumber;
-    
+	// Number of soldiers.
+    private int soldiersNumber;   
     // Mapping resource type to quantity. 
     private Map<String, Integer> resources = new HashMap<>();
-    
     // Set of cells that were visited by the player. 
     private HashSet<Integer> pastPositions = new HashSet<>();
-    
     // Current position of the player.
     private int currentPosition;
-    //status poate fi blocked sau active
-    //o sa il convertesc in enum maine sa fie mai type safe
+    // Status can be either free or blocked. 
     private String status;
-
+    // The game matrix.
 	private Matrix matrix;
 
     public Player(int currentPosition, Matrix matrix){
@@ -40,10 +35,6 @@ public class Player {
 
     public int getSoldiersNumber() {
         return soldiersNumber;
-    }
-
-    public void setSoldiersNumber(int soldiersNumber) {
-        this.soldiersNumber = soldiersNumber;
     }
 
     public Map<String, Integer> getResources() {
@@ -61,8 +52,12 @@ public class Player {
     public int getIndex() {
     	return ind;
     }
+    
+    public String getStatus() {
+    	return this.status;
+    }
 
-    // Method that moves the player from one position to another. 
+    /* Method that moves the player from one position to another. */
     public void move(){
         if (this.status.equals("blocked"))
             return;
@@ -73,39 +68,36 @@ public class Player {
             this.status = "blocked";
             return;
         }
-       // System.out.println(this.currentPosition);
+        
         this.pastPositions.add(this.currentPosition);
         this.currentPosition = determineMax(neighboursList);
     }
-    
-    public String getStatus() {
-    	return this.status;
-    }
 
-    //lista cu vecinii valizi - si ca pozitie si ca disponibilitate
+    /* Generates a list with valid neighbours. */
     public HashSet<Integer> getNeighbourList(){
         HashSet<Integer> neighbourList = new HashSet<>();
         int j = currentPosition%10;
         int i = currentPosition/10;
-        // nu suntem pe ultima linie
+        
+        // Not on the last row.
         if (i < 5){
             if (isAvailable((i+1)*10+j))
                 neighbourList.add((i+1)*10+j);
         }
         
-        //nu suntem pe ultima coloana
+        // Not on the last column. 
         if (j < 5){
             if (isAvailable(i*10+j+1))
                 neighbourList.add(i*10+j+1);
         }
         
-        //nu suntem pe prima linie
+        // Not on the first row. 
         if (i > 0){
             if (isAvailable((i-1)*10+j))
                 neighbourList.add((i-1)*10+j);
         }
         
-        //nu suntem pe prima coloana
+        // Not on the first column, 
         if (j > 0){
             if (isAvailable(i*10+j-1))
                 neighbourList.add(i*10+j-1);
@@ -114,13 +106,15 @@ public class Player {
         return neighbourList;
     }
 
-    //daca pozitia e libera => true=available => move, else false
+    /* Check if a position is available (the player hasn't been there before). */
     public boolean isAvailable(int position){
         return !pastPositions.contains(position);
     }
 
-    //determina pozitia cu nr cel mai mare de resurse dintre vecini
-    //daca toate sunt egale merge pe ultima - sper ca un fel de random pt ca Set nu are ordine
+    /* Taking the neighbour list, determines which one has the largest number of resources.
+     * In case of equality, the last value in the set is returned (this is done randomly,
+     * as sets have no specific order. 
+     */
     public int determineMax(HashSet<Integer> neighboursList){
         int max = 0, pos = 0;
         int i, j, noRes;
@@ -135,14 +129,4 @@ public class Player {
         }
         return pos;
     }
-
-	public int getMinimum() {
-		Entry<String, Integer> min = null;
-		for (Entry<String, Integer> entry : resources.entrySet()) {
-		    if (min == null || min.getValue() > entry.getValue()) {
-		        min = entry;
-		    }
-		}
-		return min.getValue();
-	}
 }
