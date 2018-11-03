@@ -15,8 +15,8 @@ class Matrix {
 		String resType = "";
 		int noR;
 		
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3; j++) {
+		for(int i = 0; i < 6; i++) {
+			for(int j = 0; j < 6; j++) {
 				noR = (int)(Math.random()*4);//cream un numar random de unitati dintr-o resurse <=5
 				int typeRes = (int)(Math.random()*3) ; //alegem random tipul de resursa 
 				switch(typeRes) {

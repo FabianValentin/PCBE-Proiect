@@ -80,22 +80,28 @@ public class Player implements Runnable {
 
     /* Method that moves the player from one position to another. */
     public void move(){
-        if (this.status.equals("blocked"))
-            return;
-
-        HashSet<Integer> neighboursList = getNeighbourList();
-
-        if (neighboursList.isEmpty()){
-        	System.out.println("Player " + this.ind + " is blocked.");
-            this.status = "blocked";
-            return;
-        }
-        
-        System.out.print("Player " + this.ind + " moved from " + this.currentPosition + " to ");
-        this.pastPositions.add(this.currentPosition);
-        this.currentPosition = determineMax(neighboursList);
-        System.out.print(currentPosition + "\n");
-        takeResources(currentPosition);
+    	synchronized(matrix) {
+	        if (this.status.equals("blocked"))
+	            return;
+	
+	        HashSet<Integer> neighboursList = getNeighbourList();
+	
+	        if (neighboursList.isEmpty()){
+	        	System.out.println("Player " + this.ind + " is blocked.");
+	            this.status = "blocked";
+	            return;
+	        }
+	        
+	        System.out.print("Player " + this.ind + " moved from " + this.currentPosition + " to ");
+	        this.pastPositions.add(this.currentPosition);
+	        if (determineMax(neighboursList) == -1) {
+	        	this.status = "blocked";
+	        	return;
+	        }
+	        this.currentPosition = determineMax(neighboursList);
+	        System.out.print(currentPosition + "\n");
+	        takeResources(currentPosition);
+    	}
     }
 
     /* Generates a list with valid neighbours. */
@@ -141,7 +147,7 @@ public class Player implements Runnable {
      * as sets have no specific order. 
      */
     public int determineMax(HashSet<Integer> neighboursList){
-        int max = 0, pos = 0;
+        int max = -1, pos = -1;
         int i, j, noRes;
         for (Integer n : neighboursList) {
             j = n%10;
@@ -159,6 +165,11 @@ public class Player implements Runnable {
 	public void run() {
 		while(this.status.equals("free")) {
 			move();
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
