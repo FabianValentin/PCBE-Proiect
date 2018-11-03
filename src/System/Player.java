@@ -31,7 +31,11 @@ public class Player implements Runnable {
         takeResources(currentPosition);
         this.status = "free";
         this.ind = ord;
-        this.ord++;
+        increment();
+    }
+    
+    private static void increment () {
+    	ord++;
     }
 
     private void takeResources(int currentPosition) {
@@ -75,19 +79,22 @@ public class Player implements Runnable {
     }
 
     /* Method that moves the player from one position to another. */
-    public synchronized void move(){
+    public void move(){
         if (this.status.equals("blocked"))
             return;
 
         HashSet<Integer> neighboursList = getNeighbourList();
 
         if (neighboursList.isEmpty()){
+        	System.out.println("Player " + this.ind + " is blocked.");
             this.status = "blocked";
             return;
         }
         
+        System.out.print("Player " + this.ind + " moved from " + this.currentPosition + " to ");
         this.pastPositions.add(this.currentPosition);
         this.currentPosition = determineMax(neighboursList);
+        System.out.print(currentPosition + "\n");
         takeResources(currentPosition);
     }
 
@@ -150,6 +157,8 @@ public class Player implements Runnable {
 
 	@Override
 	public void run() {
-		move();
+		while(this.status.equals("free")) {
+			move();
+		}
 	}
 }

@@ -17,33 +17,23 @@ public class GameSystem {
 		
 		print(matrix.getMatrix(), p1, p2);
 		
-		while (!player_list.isEmpty()) {
-			ArrayList<Thread> thread_list = new ArrayList<Thread>();
-			for(Player p : player_list) {
-				if (p.getStatus().equals("free")) {
+		ArrayList<Thread> thread_list = new ArrayList<Thread>();
+		
+		for(Player p : player_list)
 					thread_list.add(new Thread(p));
-				} 
-			}
 			
-			for(Thread t : thread_list) {
-				t.start();
-			}
-			
-			try {
-				for(Thread t : thread_list) {
-					t.join();
-				}
-				print(matrix.getMatrix(), p1, p2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			for(Player p : player_list) {
-				if (p.getStatus().equals("blocked")) {
-					player_list.remove(p);
-				} 
-			}
+		for(Thread t : thread_list) {
+			t.start();
 		}
+			
+		try {
+			for(Thread t : thread_list) {
+				t.join();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		print(matrix.getMatrix(), p1, p2);
 	}
 	
 	public static void print(Resource[][] matrix, Player p1, Player p2) {
