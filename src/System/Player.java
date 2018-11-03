@@ -23,6 +23,11 @@ public class Player implements Runnable {
     private String status;
     // The game matrix.
 	private Matrix matrix;
+	
+	private static boolean trade_ok = false;
+	private static int start_tradeing = 0;
+	
+	private int cnt = 2;
 
     public Player(int currentPosition, Matrix matrix){
     	this.matrix = matrix;
@@ -161,6 +166,32 @@ public class Player implements Runnable {
         return pos;
     }
 
+    public synchronized void trade(String givenRes, String receivedRes) {
+    	if(start_tradeing != 0)
+    	{
+    		if(trade_ok) {
+    			trade_ok = false;
+    		}
+    		else {
+    			trade_ok = true;
+    		}
+    	}
+    	else {
+    		start_tradeing++;
+    	}
+    	while(!trade_ok)
+    	{
+    		try { 
+    			System.out.println("primul tred s-a blocat");
+    			wait();
+    		} catch (InterruptedException e)  {
+    			Thread.currentThread().interrupt(); 
+    		}
+    	}
+    	notifyAll();
+    	System.out.println("A fost realizat schimbul");
+    }
+    
 	@Override
 	public void run() {
 		while(this.status.equals("free")) {
@@ -170,6 +201,10 @@ public class Player implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+		while(this.cnt != 0) {
+			trade("wood", "iron");
+			this.cnt--;
 		}
 	}
 }
