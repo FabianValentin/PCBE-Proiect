@@ -192,6 +192,64 @@ public class Player implements Runnable {
     	System.out.println("A fost realizat schimbul");
     }
     
+	public String getMinimum() {
+		
+		if (resources.get("wood") <= resources.get("food")) {
+			if (resources.get("wood") <= resources.get("iron")) {
+				return "wood";
+			}
+			else if (resources.get("food") <= resources.get("iron")){
+				return "food";
+			}
+		} else if (resources.get("food") <= resources.get("iron")) {
+				return "food";
+		}
+		return "iron";
+	}
+	
+	//se va face un schimb o data; dupa schimb se va actualiza numarul de soldati si se va preda firul aleatoriu
+	public String chooseIfNeedsChange () {
+		String min = getMinimum();
+		int wood = resources.get("wood") - resources.get(min); //a
+		int food = resources.get("food") - resources.get(min); //b
+		int iron = resources.get("iron") - resources.get(min); //c
+		
+		if (wood == 0) {
+			if ((food > 1 && iron > 1) || food > 2 || iron>2) {
+				if (food > iron) {
+					return "Needs to change b: " + (food - iron - 1);
+				} else if (food < iron) {
+					return "Needs to change c: " + (iron - food - 1);
+				} else {
+					return "Can change b or c: " + (food - iron - 1);
+				}
+			}
+		} else if (food == 0) {
+			if ((wood > 1 && iron > 1) || wood > 2 || iron>2) {
+				if (wood > iron) {
+					return "Needs to change a: " + (wood - iron - 1);
+				} else if (wood < iron) {
+					return "Needs to change c: " + (iron - wood - 1);
+				} else {
+					return "Can change a or c: " + (wood - iron - 1);
+				}
+			}
+		} else if (iron == 0) {
+			if ((wood > 1 && food > 1) || wood > 2 || food>2) {
+				if (wood > food) {
+					return "Needs to change a: " + (wood - food - 1);
+				} else if (wood < food) {
+					return "Needs to change c: " + (food - wood - 1);
+				} else {
+					return "Can change a or b: " + (wood - food - 1);
+				}
+			}
+		}
+		
+		return null;
+	}
+    
+    
 	@Override
 	public void run() {
 		while(this.status.equals("free")) {
